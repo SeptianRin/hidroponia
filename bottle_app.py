@@ -1,7 +1,7 @@
 
 import datetime
 import time
-import os
+
 import bottle
 import dataset
 import simplejson as json
@@ -194,9 +194,10 @@ def coba():
     bottle.response.content_type = "application/json"
     return json.dumps(responseall)
 
+#uncomment if deploy on
 if os.environ.get('APP_LOCATION') == 'heroku':
-    bottle.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    bottle.run(app,host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 else:
-    bottle.run(host='localhost', port=3000, debug=True)
+    bottle.run(app,host='localhost', port=3000, debug=True)
 #uncomment if deploy on pythonanywhere
 #application = default_app()
