@@ -1,0 +1,66 @@
+      body {
+        font: 13px sans-serif;
+        padding: 20px 50px;
+      }
+      .chart-placeholder {
+        border: 2px solid #ccc;
+        width: 100%;
+        user-select: none;
+      }
+      /* chart styles */
+      .mg-line1-color {
+        stroke: green;
+        stroke-width: 2;
+      }
+      .mg-main-area {
+        fill: lightgreen;
+      }
+      .mg-main-line {
+        fill:rgba(0,0,0,0);
+      }
+      .mg-x-axis line, .mg-y-axis line {
+        stroke: #b3b2b2;
+        stroke-width: 1px;
+      }
+      .navbar {
+         background-color: rgb(95,197,58); !important;
+      }
+      .page-footer{
+         background-color: rgb(95,197,58); !important;
+      }
+      .card{
+         background-color: rgb(95,197,58); !important;
+      }
+      .p-3{
+         background-color: rgb(219,252,205); !important;
+      }
+      .nav-link {
+        color: white; !important;
+      }
+      .navbar-brand {
+        color: white; !important;
+      }
+      .fab {
+        color: white; !important;
+      }
+      .fas {
+        color: white; !important;
+      }
+
+      .chip {
+      display: inline-block;
+      padding: 0 25px;
+      height: 50px;
+      font-size: 16px;
+      line-height: 50px;
+      border-radius: 25px;
+      background-color: #f1f1f1;
+    }
+
+    .chip img {
+      float: left;
+      margin: 0 10px 0 -25px;
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+    }

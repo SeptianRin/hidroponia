@@ -327,20 +327,27 @@
 </footer>
 <!-- Footer -->
 
+
+
+
+ <!-- All Import Here -->
  <!-- MDBootstap -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+<link rel="stylesheet" href="mdbs.css">
 <!-- Bootstrap core CSS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="bootstrap.min.css" rel="stylesheet">
 <!-- Material Design Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/css/mdb.min.css" rel="stylesheet">
+<link href="mdb.min.css" rel="stylesheet">
 <!-- JQuery -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.min.js"></script>
 <!-- Bootstrap tooltips -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<script type="text/javascript" src="popper.min.js"></script>
 <!-- Bootstrap core JavaScript -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/js/mdb.min.js"></script>
+<script type="text/javascript" src="mdb.min.js"></script>
+<link rel="stylesheet" href="chips.css">
+
+ <!-- end of import -->
 
 <!-- application main script
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
@@ -353,7 +360,6 @@
           //data = MG.convert.date(json, "date", "%H:%M:%S");
           data = json
           value = []
-          console.log(data);
           for (var i =  0; i <= data.length- 1; i++) {
             value.push(data[i].value);
           }
@@ -378,80 +384,6 @@
     </script>
 
     <!-- application styles -->
-    <style>
-      body {
-        font: 13px sans-serif;
-        padding: 20px 50px;
-      }
-      .chart-placeholder {
-        border: 2px solid #ccc;
-        width: 100%;
-        user-select: none;
-      }
-      /* chart styles */
-      .mg-line1-color {
-        stroke: rgb(70, 112, 6);
-        stroke-width: 2;
-      }
-      .mg-main-area, .mg-main-line {
-        fill: rgb(255, 255, 255);
-      }
-      .mg-x-axis line, .mg-y-axis line {
-        stroke: #f70b0b;
-        stroke-width: 1px;
-      }
-      .navbar {
-         background-color: rgb(95,197,58); !important;
-      }
-      .page-footer{
-         background-color: rgb(95,197,58); !important;
-      }
-      .card{
-         background-color: rgb(95,197,58); !important;
-      }
-      .p-3{
-         background-color: rgb(219,252,205); !important;
-      }
-      .nav-link {
-        color: white; !important;
-      }
-      .navbar-brand {
-        color: white; !important;
-      }
-      .fab {
-        color: white; !important;
-      }
-      .fas {
-        color: white; !important;
-      }
-
-      .chip {
-		  display: inline-block;
-		  padding: 0 25px;
-		  height: 50px;
-		  font-size: 16px;
-		  line-height: 50px;
-		  border-radius: 25px;
-		  background-color: #f1f1f1;
-		}
-
-		.chip img {
-		  float: left;
-		  margin: 0 10px 0 -25px;
-		  height: 50px;
-		  width: 50px;
-		  border-radius: 50%;
-		}
-
-    .boxed{
-      border: 2px solid #ccc;
-        width: 100%;
-    }
-
-
-
-
-    </style>
 
   </body>
 
