@@ -188,38 +188,43 @@ def lihatdata():
     return json.dumps(responseall)
 
 
+mode = "otomatis"
+
+
+@app.route("/mode", method=["GET"])
+def mode():
+    bottle.response.content_type = "application/json"
+    return json.dumps({"mode": mode})
+
+
+@app.route("/mode/manual", method=["GET"])
+def to_manual():
+    mode = "manual"
+    bottle.response.content_type = "application/json"
+    return json.dumps({"ubah": "sukses", "mode": mode})
+
+
+@app.route("/mode/otomatis", method=["GET"])
+def to_otomatis():
+    mode = "otomatis"
+    bottle.response.content_type = "application/json"
+    return json.dumps({"ubah": "sukses", "mode": mode})
+
+
+@app.route("/mode/otomatis", method=["GET"])
+def to_otomatis():
+    mode = "otomatis"
+    bottle.response.content_type = "application/json"
+    return json.dumps({"ubah": "sukses", "mode": mode})
+
+
 @app.route("/coba", method=["GET"])
 def coba():
-    responsesuhu = []
-    responsetds = []
-    responseph = []
-    responseall = {}
-    datapointssuhu = app.config["db"]["suhu"].all()
-    datapointstds = app.config["db"]["tds"].all()
-    datapointsph = app.config["db"]["ph"].all()
-
-    for suhu in datapointssuhu:
-        responsesuhu.append({
-            "date": datetime.datetime.fromtimestamp(int(suhu["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-            "value": suhu["value"]
-        })
-    for tds in datapointstds:
-        responsetds.append({
-            "date": datetime.datetime.fromtimestamp(int(tds["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-            "value": tds["value"]
-        })
-    for ph in datapointsph:
-        responseph.append({
-            "date": datetime.datetime.fromtimestamp(int(ph["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-            "value": ph["value"]
-        })
-
-    responseall.update({"dataSuhu": responsesuhu})
-    responseall.update({"dataTDS": responsetds})
-    responseall.update({"dataPH": responseph})
-
+    suhu = bottle.request.query.field1
+    tds = bottle.request.query.field2
+    ph = bottle.request.query.field3
     bottle.response.content_type = "application/json"
-    return json.dumps(responseall)
+    return json.dumps({"nilai1": suhu, "nilai2": tds, "nilai3": ph})
 
 
 # uncomment if deploy on
