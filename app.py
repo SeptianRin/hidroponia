@@ -184,6 +184,9 @@ def lihatdata():
 
 
 statusMode = "otomatis"
+manph = 7
+mantds = 1000
+mansuhu = 30
 
 
 @app.route("/mode", method=["GET"])
@@ -196,9 +199,12 @@ def mode():
 @app.route("/mode/manual", method=["GET"])
 def to_manual():
     global statusMode
+    global manph
+    global mantds
+    global mansuhu
     statusMode = "manual"
     bottle.response.content_type = "application/json"
-    return json.dumps({"ubah": "sukses", "mode": statusMode})
+    return json.dumps({"ubah": "sukses", "mode": statusMode, "manph": manph, "mantds": mantds, "mansuhu": mansuhu})
 
 
 @app.route("/mode/manual/nilai/", method=["GET"])
