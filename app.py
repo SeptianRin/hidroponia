@@ -159,7 +159,7 @@ def lihatdata():
     responsesuhu = []
     responsetds = []
     responseph = []
-    responseall = []
+    responseall = {}
     datapointssuhu = app.config["db"]["suhu"].all()
     datapointstds = app.config["db"]["tds"].all()
     datapointsph = app.config["db"]["ph"].all()
@@ -180,9 +180,9 @@ def lihatdata():
             "value": ph["value"]
         })
 
-    responseall.append(responsesuhu)
-    responseall.append(responsetds)
-    responseall.append(responseph)
+    responseall.update({"dataSuhu": responsesuhu})
+    responseall.update({"dataTDS": responsetds})
+    responseall.update({"dataPH": responseph})
 
     bottle.response.content_type = "application/json"
     return json.dumps(responseall)
@@ -204,7 +204,7 @@ def to_manual():
     return json.dumps({"ubah": "sukses", "mode": mode})
 
 
-@app.route("/mode/otomatis", method=["GET"])
+@app.route("/mode/manual/nilai/", method=["GET"])
 def to_otomatis():
     mode = "otomatis"
     bottle.response.content_type = "application/json"
