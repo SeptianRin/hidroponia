@@ -121,13 +121,8 @@ def maps(filename):
 
 
 @app.route('/<filename:re:.*\.woff2>')
-def maps(filename):
+def font(filename):
     return bottle.static_file(filename, root='static/fonts')
-
-
-@app.route('/crot')
-def crot():
-    return bottle.template('views/coba.html')
 
 
 @app.route("/simpandata", method=["GET"])
@@ -188,34 +183,37 @@ def lihatdata():
     return json.dumps(responseall)
 
 
-mode = "otomatis"
+statusMode = "otomatis"
 
 
 @app.route("/mode", method=["GET"])
 def mode():
+    global statusMode
     bottle.response.content_type = "application/json"
-    return json.dumps({"mode": mode})
+    return json.dumps({"mode": statusMode})
 
 
 @app.route("/mode/manual", method=["GET"])
 def to_manual():
-    mode = "manual"
+    global statusMode
+    statusMode = "manual"
     bottle.response.content_type = "application/json"
-    return json.dumps({"ubah": "sukses", "mode": mode})
+    return json.dumps({"ubah": "sukses", "mode": statusMode})
 
 
 @app.route("/mode/manual/nilai/", method=["GET"])
-def to_otomatis():
-    mode = "otomatis"
+def to_manual_nilai():
+    statusMode = "otomatis"
     bottle.response.content_type = "application/json"
-    return json.dumps({"ubah": "sukses", "mode": mode})
+    return json.dumps({"ubah": "sukses", "mode": statusMode})
 
 
 @app.route("/mode/otomatis", method=["GET"])
 def to_otomatis():
-    mode = "otomatis"
+    global statusMode
+    statusMode = "otomatis"
     bottle.response.content_type = "application/json"
-    return json.dumps({"ubah": "sukses", "mode": mode})
+    return json.dumps({"ubah": "sukses", "mode": statusMode})
 
 
 @app.route("/coba", method=["GET"])
