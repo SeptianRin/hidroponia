@@ -1,4 +1,3 @@
-
 import datetime
 import time
 import os
@@ -14,6 +13,10 @@ app.config["db"] = dataset.connect("sqlite:///data.db?check_same_thread=False")
 #app.config["db"] = dataset.connect("mysql+pymysql://septianrin:@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
 #app.config["db"] = dataset.connect("mysql+mysqldb://septianrin:hidroponia@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
 app.config["api_key"] = "JtF2aUE5SGHfVJBCG5SH"
+statusMode = "otomatis"
+manph = 7
+mantds = 1000
+mansuhu = 30
 
 
 @app.route('/', method=["GET"])
@@ -23,34 +26,6 @@ def index():
     thermo = "thermo.png"
     pupuk = "pupuk.png"
     return bottle.template("frontend.html", logo=logo, pupuk=pupuk, thermo=thermo, ph=ph)
-
-
-@app.route("/api", method=["GET", "POST"])
-def api():
-    if bottle.request.method == "POST":
-        status = 400
-        ts = int(time.time())
-        value = bottle.request.body.read()
-        api_key = bottle.request.get_header("Api-Key")
-
-        print(">>> {} :: {}".format(value, api_key))
-
-        if api_key == "JtF2aUE5SGHfVJBCG5SH" and value:
-            app.config["db"]["point"].insert(dict(ts=ts, value=value))
-            status = 200
-            return bottle.HTTPResponse(status=status, body="sukses")
-
-    else:
-        response = []
-        datapoints = app.config["db"]["point"].all()
-
-        for point in datapoints:
-            response.append({
-                "date": datetime.datetime.fromtimestamp(int(point["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-                "value": point["value"]
-            })
-        bottle.response.content_type = "application/json"
-        return json.dumps(response)
 
 
 @app.route("/datafrontend", method=["GET"])
@@ -76,7 +51,7 @@ def datafrontend():
             "date": point["ts"],
             "value": point["value"]
         })
-
+    response.append({"value": statusMode})
     bottle.response.content_type = "application/json"
     return json.dumps(response)
 
@@ -181,12 +156,6 @@ def lihatdata():
 
     bottle.response.content_type = "application/json"
     return json.dumps(responseall)
-
-
-statusMode = "otomatis"
-manph = 7
-mantds = 1000
-mansuhu = 30
 
 
 @app.route("/mode", method=["GET"])

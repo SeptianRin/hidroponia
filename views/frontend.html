@@ -73,6 +73,7 @@
 <div class="boxed">
 <!--/.Carousel Wrapper-->
 <center><h3>Data Sensor</h3></center>
+<center><h4><div id="modeaaa"></div></h4></center>
 <br><br><br>
 <div class="row">
 	<center class="col-sm-4">
@@ -354,6 +355,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.0/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
     <script>
+      function titleCase(string) {
+      var sentence = string.toLowerCase().split(" ");
+      for(var i = 0; i< sentence.length; i++){
+         sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+      }
+        return sentence;
+      }
       function fetch_and_render() {
         d3.json("/datafrontend", function(error,json) {
           if (error) return console.warn(error);
@@ -370,6 +378,8 @@
             data(data).text(function(data) {return "pH : "+value[0]});
           d3.select("#pupukaaa").
             data(data).text(function(data) {return "AB Mix : "+ value[2]});
+            d3.select("#modeaaa").
+            data(data).text(function(data) {return "Mode : "+ titleCase(value[3])});
         });
       }
       window.onload = function() {

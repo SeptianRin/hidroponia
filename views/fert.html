@@ -320,35 +320,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
     <script>
       function fetch_and_render() {
-
-        /*d3.json("/api", function(data) {
-          data = MG.convert.date(data, "date", "%Y-%m-%d %H:%M:%S");
-          MG.data_graphic({
-            data: data,
-            chart_type: "line",
-            full_width: true,
-            height: 320,
-            right:40,
-            interpolate: d3.curveLinear,
-            target: document.getElementById("chart"),
-            x_accessor: "date",
-            y_accessor: "value"
-          });
-        }); */
         Date.prototype.addHours = function(h) {
           this.setTime(this.getTime() + (h*60*60*1000));
           return this;
         }
 
         d3.json('/lihatdata', function(datalengkap) {
-            //console.log(datalengkap[1]);
-            data=datalengkap[1];
+
+            data=datalengkap["dataTDS"];
             //console.log(data);
             data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
-            //data.toLocaleString('ko-KR', { timeZone: 'WIB' })
-            //data.forEach(function(j){
-                //j.date = j.date.addHours(7);
-            //  });
             MG.data_graphic({
                 data: data,
                 full_width: true,

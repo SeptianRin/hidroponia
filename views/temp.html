@@ -321,21 +321,6 @@
     <script>
       function fetch_and_render() {
 
-        /*d3.json("/api", function(data) {
-          data = MG.convert.date(data, "date", "%Y-%m-%d %H:%M:%S");
-          MG.data_graphic({
-            data: data,
-            chart_type: "line",
-            full_width: true,
-            height: 320,
-            right:40,
-            interpolate: d3.curveLinear,
-            target: document.getElementById("chart"),
-            x_accessor: "date",
-            y_accessor: "value"
-          });
-        }); */
-
         Date.prototype.addHours = function(h) {
           this.setTime(this.getTime() + (h*60*60*1000));
           return this;
@@ -343,8 +328,7 @@
 
         d3.json('/lihatdata', function(datalengkap) {
             //console.log(datalengkap[0]);
-            data=datalengkap[0];
-            //console.log(data);
+            data=datalengkap["dataSuhu"];
             data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
             //data.toLocaleString('ko-KR', { timeZone: 'WIB' })
             data.forEach(function(j){
