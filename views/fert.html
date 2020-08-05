@@ -329,11 +329,13 @@
 
             data=datalengkap["dataTDS"];
             //console.log(data);
+            
             data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
             MG.data_graphic({
                 data: data,
                 full_width: true,
                 height: 400,
+                missing_is_zero: true,
                 interpolate: d3.curveLinear,
                 right: 40,
                 target: document.getElementById('chart'),
