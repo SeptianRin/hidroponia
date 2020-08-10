@@ -4,12 +4,20 @@ import os
 import bottle
 import dataset
 import simplejson as json
+# import postgress driver
+import psycopg2
 # A very simple Bottle Hello World app for you to get started with...
 from bottle import default_app
 
 app = bottle.Bottle()
 bottle.TEMPLATE_PATH.insert(0, "./")
-app.config["db"] = dataset.connect("sqlite:///data.db?check_same_thread=False")
+#app.config["db"] = dataset.connect("sqlite:///data.db?check_same_thread=False")
+if os.environ.get('APP_LOCATION') == 'heroku':
+    app.config["db"] = dataset.connect(os.environ.get('DATABASE_URL'))
+else:
+    app.config["db"] = dataset.connect(
+        'postgresql://postgres:postgres@localhost:5432/hidroponia')
+
 #app.config["db"] = dataset.connect("mysql+pymysql://septianrin:@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
 #app.config["db"] = dataset.connect("mysql+mysqldb://septianrin:hidroponia@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
 app.config["api_key"] = "JtF2aUE5SGHfVJBCG5SH"
