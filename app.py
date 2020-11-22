@@ -110,10 +110,11 @@ def font(filename):
 
 @app.route("/simpandata", method=["GET"])
 def simpandata():
-    suhu = bottle.request.query.field1
-    tds = bottle.request.query.field2
-    ph = bottle.request.query.field3
+    simsuhu = bottle.request.query.suhu
+    simtds = bottle.request.query.tds
+    simph = bottle.request.query.ph
     status = 400
+    print(str(simsuhu)+" "+str(simtds)+" "+str(simph))
     ts = int(time.time())  # current timestamp
     # value = bottle.request.body.read() # data from device
     # api_key = bottle.request.get_header("Api-Key") # api key from header
@@ -121,12 +122,14 @@ def simpandata():
     #print(">>> {} :: {}".format(value, api_key))
     # if api_key is correct and value is present
     # then writes attribute to point table
-    if suhu and tds and ph:
-        app.config["db"]["suhu"].insert(dict(ts=ts, value=suhu))
-        app.config["db"]["tds"].insert(dict(ts=ts, value=tds))
-        app.config["db"]["ph"].insert(dict(ts=ts, value=ph))
+    if simsuhu and simtds and simph:
+        app.config["db"]["suhu"].insert(dict(ts=ts, value=simsuhu))
+        app.config["db"]["tds"].insert(dict(ts=ts, value=simtds))
+        app.config["db"]["ph"].insert(dict(ts=ts, value=simph))
         status = 200
-        return bottle.HTTPResponse(status=status, body="sukses")
+        # return bottle.HTTPResponse(status=status, body="sukses")
+        # bottle.template("frontend.html")
+        return "The value of suhu is: " + simsuhu + " and the value of tds is: " + simtds + " and the value of ph is: " + simph
     # we only need to return status
     return bottle.HTTPResponse(status=status, body="gagal")
 # return "The value of param1 is: " + suhu + " and the value of param2 is: " + tds + " and the value of param 3 is: " + ph #bottle.template("frontend.html")
@@ -208,7 +211,7 @@ def coba():
     return json.dumps({"nilai1": suhu, "nilai2": tds, "nilai3": ph})
 
 
-# uncomment if deploy on
+# uncomment if deploy on heroku
 if os.environ.get('APP_LOCATION') == 'heroku':
     bottle.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 else:
