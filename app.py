@@ -14,7 +14,7 @@ bottle.TEMPLATE_PATH.insert(0, "./")
 #app.config["db"] = dataset.connect("sqlite:///data.db?check_same_thread=False")
 if os.environ.get('APP_LOCATION') == 'heroku':
     app.config["db"] = dataset.connect(
-        os.environ.get('HEROKU_POSTGRESQL_OLIVE_URL'))
+        os.environ.get('DATABASE_URL'))
 else:
     app.config["db"] = dataset.connect(
         'postgresql://postgres:postgres@localhost:5432/hidroponia')
