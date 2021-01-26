@@ -3,24 +3,25 @@ import time
 import os
 import bottle
 import dataset
+import unittest
 import simplejson as json
 # import postgress driver
 import psycopg2
-# A very simple Bottle Hello World app for you to get started with...
 from bottle import default_app
+from boddle import boddle
 
 app = bottle.Bottle()
 bottle.TEMPLATE_PATH.insert(0, "./")
-#app.config["db"] = dataset.connect("sqlite:///data.db?check_same_thread=False")
+# app.config["db"] = dataset.connect("sqlite:///data.db?check_same_thread=False")
 if os.environ.get('APP_LOCATION') == 'heroku':
     app.config["db"] = dataset.connect(
         os.environ.get('DATABASE_URL'))
 else:
     app.config["db"] = dataset.connect(
-        'postgresql://postgres:postgres@localhost:5432/hidroponia')
+        "sqlite:///data.db?check_same_thread=False")
 
-#app.config["db"] = dataset.connect("mysql+pymysql://septianrin:@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
-#app.config["db"] = dataset.connect("mysql+mysqldb://septianrin:hidroponia@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
+# app.config["db"] = dataset.connect("mysql+pymysql://septianrin:@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
+# app.config["db"] = dataset.connect("mysql+mysqldb://septianrin:hidroponia@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
 app.config["api_key"] = "JtF2aUE5SGHfVJBCG5SH"
 statusMode = "otomatis"
 manph = 7
@@ -28,7 +29,7 @@ mantds = 1000
 mansuhu = 30
 
 
-@app.route('/', method=["GET"])
+@ app.route('/', method=["GET"])
 def index():
     logo = "bitmap.png"
     ph = "ph.png"
@@ -37,11 +38,71 @@ def index():
     return bottle.template("frontend.html", logo=logo, pupuk=pupuk, thermo=thermo, ph=ph)
 
 
-@app.route("/datafrontend", method=["GET"])
+@ app.route("/height", method=["GET"])
+def thermo():
+    logo = 'bitmap.png'
+    return bottle.template("views/height.html", logo=logo)
+
+
+@ app.route("/ph", method=["GET"])
+def ph():
+    logo = 'bitmap.png'
+    return bottle.template("views/ph.html", logo=logo)
+
+
+@ app.route("/conductivity", method=["GET"])
+def fert():
+    logo = 'bitmap.png'
+    return bottle.template("views/conductivity.html", logo=logo)
+
+
+@ app.route("/asset/image/<picture>")
+def serve_pictures(picture):
+    print()
+    return bottle.static_file(picture, root='static/image')
+
+
+@ app.route('/<filename:re:.*\.css>')
+def stylesheets(filename):
+    return bottle.static_file(filename, root='static/css')
+
+
+@ app.route('/asset/js/<filename:re:.*\.js>')
+def javascripts(filename):
+    return bottle.static_file(filename, root='static/js')
+
+
+@ app.route('/<filename:re:.*\.map>')
+def maps(filename):
+    return bottle.static_file(filename, root='static/map')
+
+
+@ app.route('/<filename:re:.*\.woff2>')
+def font(filename):
+    return bottle.static_file(filename, root='static/fonts')
+
+
+@ app.route("/api", method=["GET"])
+def api():
+    response = []
+    response.append({
+        "Data Frontend": bottle.request.url+"/datafrontend"
+    })
+    response.append({
+        "Lihat Semua Data": bottle.request.url+"/lihatdata"
+    })
+    response.append({
+        "Upload Data": bottle.request.url+"/simpandata?tinggi={nilai}&ec={nilai}&ph={nilai}"
+    })
+    bottle.response.content_type = "application/json"
+    return json.dumps(response)
+
+
+@ app.route("/api/datafrontend", method=["GET"])
 def datafrontend():
     response = []
-    datapointssuhu = app.config["db"]["suhu"].all(_limit=1, order_by='-id')
-    datapointstds = app.config["db"]["tds"].all(_limit=1, order_by='-id')
+    datapointstinggi = app.config["db"]["tinggi"].all(_limit=1, order_by='-id')
+    datapointsec = app.config["db"]["ec"].all(_limit=1, order_by='-id')
     datapointsph = app.config["db"]["ph"].all(_limit=1, order_by='-id')
 
     for point in datapointsph:
@@ -50,111 +111,66 @@ def datafrontend():
             "value": point["value"]
         })
 
-    for point in datapointssuhu:
+    for point in datapointstinggi:
         response.append({
             "date": point["ts"],
             "value": point["value"]
         })
-    for point in datapointstds:
+    for point in datapointsec:
         response.append({
             "date": point["ts"],
             "value": point["value"]
         })
-    response.append({"value": statusMode})
     bottle.response.content_type = "application/json"
     return json.dumps(response)
 
 
-@app.route("/thermo", method=["GET"])
-def thermo():
-    logo = 'bitmap.png'
-    return bottle.template("views/temp.html", logo=logo)
-
-
-@app.route("/ph", method=["GET"])
-def ph():
-    logo = 'bitmap.png'
-    return bottle.template("views/ph.html", logo=logo)
-
-
-@app.route("/fert", method=["GET"])
-def fert():
-    logo = 'bitmap.png'
-    return bottle.template("views/fert.html", logo=logo)
-
-
-@app.route("/asset/image/<picture>")
-def serve_pictures(picture):
-    print()
-    return bottle.static_file(picture, root='static/image')
-
-
-@app.route('/<filename:re:.*\.css>')
-def stylesheets(filename):
-    return bottle.static_file(filename, root='static/css')
-
-
-@app.route('/<filename:re:.*\.js>')
-def javascripts(filename):
-    return bottle.static_file(filename, root='static/js')
-
-
-@app.route('/<filename:re:.*\.map>')
-def maps(filename):
-    return bottle.static_file(filename, root='static/map')
-
-
-@app.route('/<filename:re:.*\.woff2>')
-def font(filename):
-    return bottle.static_file(filename, root='static/fonts')
-
-
-@app.route("/simpandata", method=["GET"])
+@ app.route("/api/simpandata", method=["GET"])
 def simpandata():
-    simsuhu = bottle.request.query.suhu
-    simtds = bottle.request.query.tds
+
+    simtinggi = bottle.request.query.tinggi
+    simec = bottle.request.query.ec
     simph = bottle.request.query.ph
     status = 400
-    print(str(simsuhu)+" "+str(simtds)+" "+str(simph))
     ts = int(time.time())  # current timestamp
-    # value = bottle.request.body.read() # data from device
-    # api_key = bottle.request.get_header("Api-Key") # api key from header
-    # outputs to console recieved data for debug reason
-    #print(">>> {} :: {}".format(value, api_key))
-    # if api_key is correct and value is present
-    # then writes attribute to point table
-    if simsuhu and simtds and simph:
-        app.config["db"]["suhu"].insert(dict(ts=ts, value=simsuhu))
-        app.config["db"]["tds"].insert(dict(ts=ts, value=simtds))
+
+    def is_number(n):
+        try:
+            float(n)
+        except ValueError:
+            return False
+        else:
+            return True
+
+    if is_number(simtinggi) and is_number(simec) and is_number(simph):
+        app.config["db"]["tinggi"].insert(dict(ts=ts, value=simtinggi))
+        app.config["db"]["ec"].insert(dict(ts=ts, value=simec))
         app.config["db"]["ph"].insert(dict(ts=ts, value=simph))
         status = 200
-        # return bottle.HTTPResponse(status=status, body="sukses")
-        # bottle.template("frontend.html")
-        return "The value of suhu is: " + simsuhu + " and the value of tds is: " + simtds + " and the value of ph is: " + simph
-    # we only need to return status
-    return bottle.HTTPResponse(status=status, body="gagal")
-# return "The value of param1 is: " + suhu + " and the value of param2 is: " + tds + " and the value of param 3 is: " + ph #bottle.template("frontend.html")
+        return "The value of tinggi is: " + simtinggi + " and the value of EC is: " + simec + " and the value of ph is: " + simph
+    else:
+        return "Data masukan tidak memenuhi format masukan"
 
 
-@app.route("/lihatdata", method=["GET"])
+@ app.route("/api/lihatdata", method=["GET"])
 def lihatdata():
-    responsesuhu = []
-    responsetds = []
+    responsetinggi = []
+    responseec = []
     responseph = []
     responseall = {}
-    datapointssuhu = app.config["db"]["suhu"].all()
-    datapointstds = app.config["db"]["tds"].all()
+    datapointstinggi = app.config["db"]["tinggi"].all()
+    datapointsec = app.config["db"]["ec"].all()
     datapointsph = app.config["db"]["ph"].all()
 
-    for suhu in datapointssuhu:
-        responsesuhu.append({
-            "date": datetime.datetime.fromtimestamp(int(suhu["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-            "value": suhu["value"]
+    for tinggi in datapointstinggi:
+        responsetinggi.append({
+            "date": datetime.datetime.fromtimestamp(int(tinggi["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
+            "value": tinggi["value"]
         })
-    for tds in datapointstds:
-        responsetds.append({
-            "date": datetime.datetime.fromtimestamp(int(tds["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-            "value": tds["value"]
+    for ec in datapointsec:
+        responseec.append({
+            "date": datetime.datetime.fromtimestamp(int(ec["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
+            "value": ec["value"]
         })
     for ph in datapointsph:
         responseph.append({
@@ -162,54 +178,12 @@ def lihatdata():
             "value": ph["value"]
         })
 
-    responseall.update({"dataSuhu": responsesuhu})
-    responseall.update({"dataTDS": responsetds})
+    responseall.update({"dataTinggi": responsetinggi})
+    responseall.update({"dataEC": responseec})
     responseall.update({"dataPH": responseph})
 
     bottle.response.content_type = "application/json"
     return json.dumps(responseall)
-
-
-@app.route("/mode", method=["GET"])
-def mode():
-    global statusMode
-    bottle.response.content_type = "application/json"
-    return json.dumps({"mode": statusMode})
-
-
-@app.route("/mode/manual", method=["GET"])
-def to_manual():
-    global statusMode
-    global manph
-    global mantds
-    global mansuhu
-    statusMode = "manual"
-    bottle.response.content_type = "application/json"
-    return json.dumps({"ubah": "sukses", "mode": statusMode, "manph": manph, "mantds": mantds, "mansuhu": mansuhu})
-
-
-@app.route("/mode/manual/nilai/", method=["GET"])
-def to_manual_nilai():
-    statusMode = "otomatis"
-    bottle.response.content_type = "application/json"
-    return json.dumps({"ubah": "sukses", "mode": statusMode})
-
-
-@app.route("/mode/otomatis", method=["GET"])
-def to_otomatis():
-    global statusMode
-    statusMode = "otomatis"
-    bottle.response.content_type = "application/json"
-    return json.dumps({"ubah": "sukses", "mode": statusMode})
-
-
-@app.route("/coba", method=["GET"])
-def coba():
-    suhu = bottle.request.query.field1
-    tds = bottle.request.query.field2
-    ph = bottle.request.query.field3
-    bottle.response.content_type = "application/json"
-    return json.dumps({"nilai1": suhu, "nilai2": tds, "nilai3": ph})
 
 
 # uncomment if deploy on heroku
@@ -218,4 +192,4 @@ if os.environ.get('APP_LOCATION') == 'heroku':
 else:
     bottle.run(app, host='localhost', port=3000, debug=True)
 # uncomment if deploy on pythonanywhere
-#application = default_app()
+# application = default_app()

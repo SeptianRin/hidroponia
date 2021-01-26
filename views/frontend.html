@@ -73,14 +73,13 @@
 <div class="boxed">
 <!--/.Carousel Wrapper-->
 <center><h3>Data Sensor</h3></center>
-<center><h4><div id="modeaaa"></div></h4></center>
 <br><br><br>
 <div class="row">
 	<center class="col-sm-4">
-		<a href="/thermo">
+		<a href="/height">
 		<div class="chip" style="width: 90%">
 		  <img src="asset/image/{{thermo}}" alt="Person" width="96" height="96">
-		  <div id="thermoaaa"></div>
+		  <div id="heightaaa"></div>
 		</div>
 		</a>
 	</center>
@@ -93,7 +92,7 @@
 		</a>
 	</center>
 	<center class="col-sm-4">
-		<a href="/fert">
+		<a href="/conductivity">
 		<div class="chip" style="width: 90%">
 		  <img src="asset/image/{{pupuk}}" alt="Person" width="96" height="96">
 		  <div id="pupukaaa"></div>
@@ -363,7 +362,7 @@
         return sentence;
       }
       function fetch_and_render() {
-        d3.json("/datafrontend", function(error,json) {
+        d3.json("/api/datafrontend", function(error,json) {
           if (error) return console.warn(error);
           //data = MG.convert.date(json, "date", "%H:%M:%S");
           data = json
@@ -373,13 +372,11 @@
           }
           //console.log(value)
           d3.select("#thermoaaa").
-            data(data).text(function(data) {return "Temp : "+value[1]+ " °C"});
+            data(data).text(function(data) {return "Tinggi: "+value[1]+ "cm"});
           d3.select("#phaaa").
             data(data).text(function(data) {return "pH : "+value[0]});
           d3.select("#pupukaaa").
-            data(data).text(function(data) {return "AB Mix : "+ value[2]});
-            d3.select("#modeaaa").
-            data(data).text(function(data) {return "Mode : "+ titleCase(value[3])});
+            data(data).text(function(data) {return "Conductivity : "+ value[2]});
         });
       }
       window.onload = function() {

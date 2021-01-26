@@ -327,7 +327,7 @@
           return this;
         }
 
-        d3.json('/lihatdata', function(datalengkap) {
+        d3.json('/api/lihatdata', function(datalengkap) {
             data=datalengkap["dataPH"];
             //console.log(data);
             data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");

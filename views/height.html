@@ -72,7 +72,7 @@
 
       <div class="chart-placeholder">
         <br>
-        <h4>Pupuk (TDS)</h4>
+        <h4>Temperature</h4>
         <div id="chart"></div>
       </div>
 <br><br>
@@ -320,22 +320,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
     <script>
       function fetch_and_render() {
+
         Date.prototype.addHours = function(h) {
           this.setTime(this.getTime() + (h*60*60*1000));
           return this;
         }
 
-        d3.json('/lihatdata', function(datalengkap) {
-
-            data=datalengkap["dataTDS"];
-            //console.log(data);
-            
+        d3.json('/api/lihatdata', function(datalengkap) {
+            //console.log(datalengkap[0]);
+            data=datalengkap["dataTinggi"];
             data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
+            //data.toLocaleString('ko-KR', { timeZone: 'WIB' })
+            data.forEach(function(j){
+                j.date = j.date.addHours(7);
+              });
             MG.data_graphic({
                 data: data,
                 full_width: true,
                 height: 400,
-                missing_is_zero: true,
                 interpolate: d3.curveLinear,
                 right: 40,
                 target: document.getElementById('chart'),
@@ -343,7 +345,7 @@
                 //y_accessor: 'value',
                 missing_is_hidden: true,
                 brush: 'xy',
-                max_y:1500
+                max_y:100
             });
         });
 
@@ -412,22 +414,22 @@
       }
 
       .chip {
-      display: inline-block;
-      padding: 0 25px;
-      height: 50px;
-      font-size: 16px;
-      line-height: 50px;
-      border-radius: 25px;
-      background-color: #f1f1f1;
-    }
+		  display: inline-block;
+		  padding: 0 25px;
+		  height: 50px;
+		  font-size: 16px;
+		  line-height: 50px;
+		  border-radius: 25px;
+		  background-color: #f1f1f1;
+		}
 
-    .chip img {
-      float: left;
-      margin: 0 10px 0 -25px;
-      height: 50px;
-      width: 50px;
-      border-radius: 50%;
-    }
+		.chip img {
+		  float: left;
+		  margin: 0 10px 0 -25px;
+		  height: 50px;
+		  width: 50px;
+		  border-radius: 50%;
+		}
 
 
 
