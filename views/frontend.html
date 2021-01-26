@@ -87,7 +87,7 @@
 		<a href="/ph">
 		<div class="chip"style="width: 90%">
 		  <img src="asset/image/{{ph}}" alt="Person" width="96" height="96">
-		  <div id="phaaa"></div>
+		  <div id="ecaaa"></div>
 		</div>
 		</a>
 	</center>
@@ -371,9 +371,9 @@
             value.push(data[i].value);
           }
           //console.log(value)
-          d3.select("#thermoaaa").
+          d3.select("#heightaaa").
             data(data).text(function(data) {return "Tinggi: "+value[1]+ "cm"});
-          d3.select("#phaaa").
+          d3.select("#ecaaa").
             data(data).text(function(data) {return "pH : "+value[0]});
           d3.select("#pupukaaa").
             data(data).text(function(data) {return "Conductivity : "+ value[2]});
