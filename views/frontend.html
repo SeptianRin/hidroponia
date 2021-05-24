@@ -9,13 +9,15 @@
 
   <!--Navbar -->
 <nav class="mb-1 navbar navbar-expand-lg ">
-  <a class="navbar-brand" href="/"><img src="asset/image/{{logo}}" style="max-width: 50px">&nbspHidroponia</a>
+  <a class="navbar-brand" href="/"><img src="asset/image/{{logo}}" style="max-width: 50px"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
     aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+  &nbsp<h2 style="color: white;"><b>Hidroponia</b></h2>
   <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
     <ul class="navbar-nav mr-auto">
+      
       <li class="nav-item active">
         <a class="nav-link" href="#">Feed
           <span class="sr-only">(current)</span>
@@ -87,7 +89,7 @@
 		<a href="/ph">
 		<div class="chip"style="width: 90%">
 		  <img src="asset/image/{{ph}}" alt="Person" width="96" height="96">
-		  <div id="ecaaa"></div>
+		  <div id="phaaa"></div>
 		</div>
 		</a>
 	</center>
@@ -95,19 +97,36 @@
 		<a href="/conductivity">
 		<div class="chip" style="width: 90%">
 		  <img src="asset/image/{{pupuk}}" alt="Person" width="96" height="96">
-		  <div id="pupukaaa"></div>
+		  <div id="ecaaa"></div>
 		</div>
 		</a>
 	</center>
 </div>
+<br>
+<br>
+      <div class="chart-placeholder ">
+        <center><h4>PH</h4></center>
+        <div class="row">
+        <div class="col-sm-9">
+          <div id="phchart"></div>
+        </div>
+        <div class="col-sm-3 d-flex justify-content-center align-items-center flex-column">
+            
+          <div class="tk" data-amount='{{ dummytank }}'>
+              <div id="heightaa"></div>
+              <div class="lq">
+
+              </div>
+          
+            </div>
+            <br>
+            Estimasi Waktu : > 1 jam
+          </div>
+      </div>
+        <br>
+        
+      </div>
 <br><br>
-
-</div>
-<br><br>
-
-
-
-
 
 <!--main-->
 <div class="card">
@@ -332,20 +351,20 @@
 
  <!-- All Import Here -->
  <!-- MDBootstap -->
-<link rel="stylesheet" href="mdbs.css">
+<link rel="stylesheet" href="/mdbs.css">
 <!-- Bootstrap core CSS -->
-<link href="bootstrap.min.css" rel="stylesheet">
+<link href="/bootstrap.min.css" rel="stylesheet">
 <!-- Material Design Bootstrap -->
-<link href="mdb.min.css" rel="stylesheet">
+<link href="/mdb.min.css" rel="stylesheet">
 <!-- JQuery -->
-<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="/jquery.min.js"></script>
 <!-- Bootstrap tooltips -->
-<script type="text/javascript" src="popper.min.js"></script>
+<script type="text/javascript" src="/popper.min.js"></script>
 <!-- Bootstrap core JavaScript -->
-<script type="text/javascript" src="bootstrap.min.js"></script>
+<script type="text/javascript" src="/bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
-<script type="text/javascript" src="mdb.min.js"></script>
-<link rel="stylesheet" href="chips.css">
+<script type="text/javascript" src="/mdb.min.js"></script>
+<link rel="stylesheet" href="/chips.css">
 
  <!-- end of import -->
 
@@ -354,6 +373,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.0/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
     <script>
+    
       function titleCase(string) {
       var sentence = string.toLowerCase().split(" ");
       for(var i = 0; i< sentence.length; i++){
@@ -368,29 +388,104 @@
           data = json
           value = []
           for (var i =  0; i <= data.length- 1; i++) {
-            value.push(data[i].value);
+            value.push(data[i].value);  
           }
           //console.log(value)
+          d3.selectAll(".tk").attr('data-amount',value[0]);
+          var amount = value[0],
+          height = (100-amount) * 80/100 + 20;
+          $('.lq').css({height : height + '%'});
+          d3.select("#heightaa").
+            data(data).text(function(data) {return value[0]+ "%"});
+          
           d3.select("#heightaaa").
-            data(data).text(function(data) {return "Tinggi: "+value[1]+ "cm"});
+            data(data).text(function(data) {return "Tinggi: "+value[0]+ "cm"});
+          d3.select("#phaaa").
+            data(data).text(function(data) {return "pH : "+value[2]});
           d3.select("#ecaaa").
-            data(data).text(function(data) {return "pH : "+value[0]});
-          d3.select("#pupukaaa").
-            data(data).text(function(data) {return "Conductivity : "+ value[2]});
+            data(data).text(function(data) {return "Conductivity : "+ value[1]});
+        });
+      }
+      function fetch_and_render_it() {
+            d3.json('/api/lihatdata', function(datalengkap) {
+            data=datalengkap["dataPH"];
+            //console.log(data);
+            data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
+            
+            //data.toLocaleString('ko-KR', { timeZone: 'WIB' })
+            MG.data_graphic({
+                data: data,
+                full_width: true,
+                height: 400,
+                interpolate: d3.curveLinear,
+                right: 40,
+                target: document.getElementById('phchart'),
+                x_accessor: 'date',
+                y_accessor: 'value',
+                missing_is_hidden: true,
+                brush: 'xy',
+                max_y:14
+            });
         });
       }
       window.onload = function() {
         // initial call for rendering
         fetch_and_render();
+        fetch_and_render_it();
 
         // updates chart every 5 seconds
         setInterval(function() {
           fetch_and_render();
+          fetch_and_render_it();
         }, 5000);
       }
     </script>
 
+    <!-- <script>
+      var amount = $('.tk').attr('data-amount'),
+    height = (100-amount) * 80/100 + 20;
+
+    $('.lq').css({height : height + '%'});
+    </script> -->
+
     <!-- application styles -->
+
+    <style>
+      .tk{ /*Liquid Section*/
+    position:relative;
+    width:40%; 
+    height:130px;
+    padding-top:50px;
+    margin: 0 auto;
+    background:rgba(53, 228, 251, 0.8);
+    border-radius: 100%/40px;
+    border-bottom:3px solid #000;
+    text-align:center;
+    z-index:1;
+    overflow:hidden;
+
+}
+.tk:after, .lq{
+    content:'';
+    position:absolute;
+    top:0; left:0;
+    width:100%;
+    height:20%;
+    z-index:-1;
+}
+.lq{
+    background:rgba(221, 144, 144, 0.99);
+    height:80%;
+    top:-2px;
+    border-radius:100%/40px;
+    border-bottom:3px solid #000;
+}
+.tk:after{
+    height:20%;
+    border:1px solid #000;
+    border-radius:100%; /*makes circle at top*/
+}
+    </style>
 
   </body>
 

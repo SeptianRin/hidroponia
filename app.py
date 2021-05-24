@@ -5,6 +5,7 @@ import bottle
 import dataset
 import unittest
 import simplejson as json
+import requests
 # import postgress driver
 import psycopg2
 from bottle import default_app
@@ -23,19 +24,29 @@ else:
 # app.config["db"] = dataset.connect("mysql+pymysql://septianrin:@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
 # app.config["db"] = dataset.connect("mysql+mysqldb://septianrin:hidroponia@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
 app.config["api_key"] = "JtF2aUE5SGHfVJBCG5SH"
-statusMode = "otomatis"
-manph = 7
-mantds = 1000
-mansuhu = 30
 
 
 @ app.route('/', method=["GET"])
 def index():
+    dummytank = ""
     logo = "bitmap.png"
     ph = "ph.png"
     thermo = "thermo.png"
     pupuk = "pupuk.png"
-    return bottle.template("frontend.html", logo=logo, pupuk=pupuk, thermo=thermo, ph=ph)
+
+    nilaitank = app.config["db"]["data"].all(_limit=1, order_by='-id')
+    for point in nilaitank:
+        dummytank = point["tinggi"]
+
+    return bottle.template("frontend.html", logo=logo, pupuk=pupuk, thermo=thermo, ph=ph, dummytank=dummytank)
+
+
+@ app.route('/predict', method=["GET"])
+def predict():
+    # URL = "http://forecast-that.herokuapp.com/predict/"+str(count)
+    URL = "http://forecast-that.herokuapp.com/predict"
+    response = requests.get(url=URL)
+    return response
 
 
 @ app.route("/height", method=["GET"])
@@ -58,7 +69,6 @@ def fert():
 
 @ app.route("/asset/image/<picture>")
 def serve_pictures(picture):
-    print()
     return bottle.static_file(picture, root='static/image')
 
 
@@ -67,7 +77,7 @@ def stylesheets(filename):
     return bottle.static_file(filename, root='static/css')
 
 
-@ app.route('/asset/js/<filename:re:.*\.js>')
+@ app.route('/<filename:re:.*\.js>')
 def javascripts(filename):
     return bottle.static_file(filename, root='static/js')
 
@@ -101,33 +111,27 @@ def api():
 @ app.route("/api/datafrontend", method=["GET"])
 def datafrontend():
     response = []
-    datapointstinggi = app.config["db"]["tinggi"].all(_limit=1, order_by='-id')
-    datapointsec = app.config["db"]["ec"].all(_limit=1, order_by='-id')
-    datapointsph = app.config["db"]["ph"].all(_limit=1, order_by='-id')
-
-    for point in datapointsph:
+    datapointsdata = app.config["db"]["data"].all(_limit=1, order_by='-id')
+    for point in datapointsdata:
         response.append({
             "date": point["ts"],
-            "value": point["value"]
+            "value": point["tinggi"]
+        })
+        response.append({
+            "date": point["ts"],
+            "value": point["ec"]
+        })
+        response.append({
+            "date": point["ts"],
+            "value": point["ph"]
         })
 
-    for point in datapointstinggi:
-        response.append({
-            "date": point["ts"],
-            "value": point["value"]
-        })
-    for point in datapointsec:
-        response.append({
-            "date": point["ts"],
-            "value": point["value"]
-        })
     bottle.response.content_type = "application/json"
     return json.dumps(response)
 
 
 @ app.route("/api/simpandata", method=["GET"])
 def simpandata():
-
     simtinggi = bottle.request.query.tinggi
     simec = bottle.request.query.ec
     simph = bottle.request.query.ph
@@ -141,15 +145,22 @@ def simpandata():
             return False
         else:
             return True
-
-    if is_number(simtinggi) and is_number(simec) and is_number(simph):
-        app.config["db"]["tinggi"].insert(dict(ts=ts, value=simtinggi))
-        app.config["db"]["ec"].insert(dict(ts=ts, value=simec))
-        app.config["db"]["ph"].insert(dict(ts=ts, value=simph))
-        status = 200
-        return "The value of tinggi is: " + simtinggi + " and the value of EC is: " + simec + " and the value of ph is: " + simph
+    if simtinggi:
+        if simec:
+            if simph:
+                if is_number(simtinggi) and is_number(simec) and is_number(simph):
+                    app.config["db"]["data"].insert(
+                        dict(ts=ts, tinggi=simtinggi, ec=simec, ph=simph))
+                    status = 200
+                    return "Nilai tinggi: " + simtinggi + ", Nilai EC: " + simec + ", dan Nilai PH: " + simph
+                else:
+                    return "Data masukan tidak dalam bentuk digit"
+            else:
+                return "Data masukan PH tidak ditemukan"
+        else:
+            return "Data masukan EC tidak ditemukan"
     else:
-        return "Data masukan tidak memenuhi format masukan"
+        return "Data masukan Tinggi Nutrisi tidak ditemukan"
 
 
 @ app.route("/api/lihatdata", method=["GET"])
@@ -158,24 +169,22 @@ def lihatdata():
     responseec = []
     responseph = []
     responseall = {}
-    datapointstinggi = app.config["db"]["tinggi"].all()
-    datapointsec = app.config["db"]["ec"].all()
-    datapointsph = app.config["db"]["ph"].all()
+    datapointsall = app.config["db"]["data"].all()
 
-    for tinggi in datapointstinggi:
+    for data in datapointsall:
         responsetinggi.append({
-            "date": datetime.datetime.fromtimestamp(int(tinggi["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-            "value": tinggi["value"]
+            "date": datetime.datetime.fromtimestamp(int(data["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
+            "value": data["tinggi"]
         })
-    for ec in datapointsec:
+
         responseec.append({
-            "date": datetime.datetime.fromtimestamp(int(ec["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-            "value": ec["value"]
+            "date": datetime.datetime.fromtimestamp(int(data["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
+            "value": data["ec"]
         })
-    for ph in datapointsph:
+
         responseph.append({
-            "date": datetime.datetime.fromtimestamp(int(ph["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
-            "value": ph["value"]
+            "date": datetime.datetime.fromtimestamp(int(data["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
+            "value": data["ph"]
         })
 
     responseall.update({"dataTinggi": responsetinggi})
