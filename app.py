@@ -17,6 +17,7 @@ bottle.TEMPLATE_PATH.insert(0, "./")
 # app.config["db"] = dataset.connect("sqlite:///data.db?check_same_thread=False")
 if os.environ.get('APP_LOCATION') == 'heroku':
     uri = os.getenv("DATABASE_URL")  # or other relevant config var
+    print(uri)
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
         app.config["db"] = dataset.connect(
