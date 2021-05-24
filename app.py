@@ -20,8 +20,7 @@ if os.environ.get('APP_LOCATION') == 'heroku':
     print(uri)
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
-        app.config["db"] = dataset.connect(
-            os.environ.get(uri))
+        app.config["db"] = dataset.connect(uri)
 else:
     app.config["db"] = dataset.connect(
         "sqlite:///data.db?check_same_thread=False")
