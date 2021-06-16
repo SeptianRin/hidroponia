@@ -199,6 +199,38 @@ def lihatdata():
     return json.dumps(responseall)
 
 
+@ app.route("/api/lihatdata/<jumlah>", method=["GET"])
+def lihatdata(jumlah):
+    responsetinggi = []
+    responseec = []
+    responseph = []
+    responseall = {}
+    datapointsall = app.config["db"]["data"].all(_limit=jumlah, order_by="-id")
+
+    for data in datapointsall:
+        responsetinggi.append({
+            "date": datetime.datetime.fromtimestamp(int(data["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
+            "value": data["tinggi"]
+        })
+
+        responseec.append({
+            "date": datetime.datetime.fromtimestamp(int(data["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
+            "value": data["ec"]
+        })
+
+        responseph.append({
+            "date": datetime.datetime.fromtimestamp(int(data["ts"])).strftime("%Y-%m-%d %H:%M:%S"),
+            "value": data["ph"]
+        })
+
+    responseall.update({"dataTinggi": responsetinggi})
+    responseall.update({"dataEC": responseec})
+    responseall.update({"dataPH": responseph})
+
+    bottle.response.content_type = "application/json"
+    return json.dumps(responseall)
+
+
 # uncomment if deploy on heroku
 if os.environ.get('APP_LOCATION') == 'heroku':
     bottle.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

@@ -392,11 +392,11 @@
           }
           //console.log(value)
           d3.selectAll(".tk").attr('data-amount',value[0]);
-          var amount = value[0],
+          var amount = value[0]*100/500,
           height = (100-amount) * 80/100 + 20;
           $('.lq').css({height : height + '%'});
           d3.select("#heightaa").
-            data(data).text(function(data) {return value[0]+ "%"});
+            data(data).text(function(data) {return value[0]+ "mL"});
           
           d3.select("#heightaaa").
             data(data).text(function(data) {return "Tinggi: "+value[0]+ "cm"});
@@ -407,7 +407,7 @@
         });
       }
       function fetch_and_render_it() {
-            d3.json('/api/lihatdata', function(datalengkap) {
+            d3.json('/api/lihatdata/10', function(datalengkap) {
             data=datalengkap["dataPH"];
             //console.log(data);
             data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
@@ -418,13 +418,14 @@
                 full_width: true,
                 height: 400,
                 interpolate: d3.curveLinear,
-                right: 40,
+                right: 10,
                 target: document.getElementById('phchart'),
                 x_accessor: 'date',
                 y_accessor: 'value',
                 missing_is_hidden: true,
                 brush: 'xy',
-                max_y:14
+                max_y:14,
+                transition_on_update:false
             });
         });
       }
