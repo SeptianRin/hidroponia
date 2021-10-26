@@ -6,7 +6,7 @@ from app import simpandata
 
 class AppTesting(unittest.TestCase):
 
-    # Test case 1-2-3-4-5-6-11
+# Test case 1-2-3-4-5-6-11
 
     def testTrueQuery(self):
         n_tinggi = 35.3
@@ -52,6 +52,40 @@ class AppTesting(unittest.TestCase):
             self.assertEqual(
                 simpandata(), 'Data masukan tidak dalam bentuk digit')
 
+# Test case dummy
+
+    def testNonDigitQuerya(self):
+        with boddle(path='api/simpandata', method='get', query={'tinggi': 'a', 'ec': 'b', 'ph': 'c'}):
+            self.assertEqual(
+                simpandata(), 'Data masukan tidak dalam bentuk digit')
+
+# Test case dummy
+
+    def testNonDigitQueryb(self):
+        with boddle(path='api/simpandata', method='get', query={'tinggi': 'a', 'ec': 'b', 'ph': 'c'}):
+            self.assertEqual(
+                simpandata(), 'Data masukan tidak dalam bentuk digit')
+
+# Test case dummy
+
+    def testNonDigitQueryc(self):
+        with boddle(path='api/simpandata', method='get', query={'tinggi': 'a', 'ec': 'b', 'ph': 'c'}):
+            self.assertEqual(
+                simpandata(), 'Data masukan tidak dalam bentuk digit')
+
+# Test case dummy
+
+    def testNonDigitQueryd(self):
+        with boddle(path='api/simpandata', method='get', query={'tinggi': 'a', 'ec': 'b', 'ph': 'c'}):
+            self.assertEqual(
+                simpandata(), 'Data masukan tidak dalam bentuk digit')
+
+# Test case dummy
+
+    def testNonDigitQuerye(self):
+        with boddle(path='api/simpandata', method='get', query={'tinggi': 'a', 'ec': 'b', 'ph': 'c'}):
+            self.assertEqual(
+                simpandata(), 'Data masukan tidak dalam bentuk digit')
 
 if __name__ == '__main__':
     unittest.main()
