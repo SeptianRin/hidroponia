@@ -105,7 +105,7 @@
 <br>
 <br>
       <div class="chart-placeholder ">
-        <center><h4>PH</h4></center>
+        <center><h4>Total Dissolved Solids</h4></center>
         <div class="row">
         <div class="col-sm-9">
           <div id="phchart"></div>
@@ -408,7 +408,7 @@
       }
       function fetch_and_render_it() {
             d3.json('/api/lihatdata/10', function(datalengkap) {
-            data=datalengkap["dataPH"];
+            data=datalengkap["dataEC"];
             //console.log(data);
             data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
             
@@ -424,7 +424,7 @@
                 y_accessor: 'value',
                 missing_is_hidden: true,
                 brush: 'xy',
-                max_y:14,
+                max_y:1500,
                 transition_on_update:false
             });
         });
