@@ -136,7 +136,7 @@ def datafrontend():
 
 @app.route("/api/simpandata", method=["POST"])
 def simpandata():
-    dataJson = bottle.response.json
+    dataJson = bottle.request.json
     simtinggi = dataJson.tinggi
     simec = dataJson.ec
     simph = dataJson.ph
