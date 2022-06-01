@@ -134,7 +134,38 @@ def datafrontend():
     return json.dumps(response)
 
 
-@ app.route("/api/simpandata", method=["GET"])
+@app.route("/api/simpandata", method=["POST"])
+def simpandata():
+    dataJson = json.dumps(bottle.request.body)
+    simtinggi = dataJson.tinggi
+    simec = dataJson.ec
+    simph = dataJson.ph
+    status = 400
+    ts = int(time.time())  # current timestamp
+
+    def is_number(n):
+        try:
+            float(n)
+        except ValueError:
+            return False
+        else:
+            return True
+    if simtinggi:
+        if simec:
+            if simph:
+                if is_number(simtinggi) and is_number(simec) and is_number(simph):
+                    status = 200
+                    return "Nilai tinggi: " + simtinggi + ", Nilai EC: " + simec + ", dan Nilai PH: " + simph
+                else:
+                    return "Data masukan tidak dalam bentuk digit"
+            else:
+                return "Data masukan PH tidak ditemukan"
+        else:
+            return "Data masukan EC tidak ditemukan"
+    else:
+        return "Data masukan Tinggi Nutrisi tidak ditemukan"
+
+@app.route("/api/simpandata", method=["GET"])
 def simpandata():
     simtinggi = bottle.request.query.tinggi
     simec = bottle.request.query.ec
