@@ -137,9 +137,9 @@ def datafrontend():
 @app.route("/api/simpandata", method=["POST"])
 def simpandata():
     dataJson = bottle.request.json
-    simtinggi = dataJson.tinggi
-    simec = dataJson.ec
-    simph = dataJson.ph
+    simtinggi = dataJson["tinggi"]
+    simec = dataJson["ec"]
+    simph = dataJson["ph"]
     status = 400
     ts = int(time.time())  # current timestamp
 
