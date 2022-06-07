@@ -154,6 +154,8 @@ def simpandata():
         if simec:
             if simph:
                 if is_number(simtinggi) and is_number(simec) and is_number(simph):
+                    app.config["db"]["data"].insert(
+                        dict(ts=ts, tinggi=simtinggi, ec=simec, ph=simph))
                     status = 200
                     return "Nilai tinggi: " + simtinggi + ", Nilai EC: " + simec + ", dan Nilai PH: " + simph
                 else:
