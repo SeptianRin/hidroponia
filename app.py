@@ -157,7 +157,7 @@ def simpandata():
                     app.config["db"]["data"].insert(
                         dict(ts=ts, tinggi=simtinggi, ec=simec, ph=simph))
                     status = 200
-                    return "Nilai tinggi: " + simtinggi + ", Nilai EC: " + simec + ", dan Nilai PH: " + simph
+                    return "Nilai tinggi: " + str(simtinggi) + ", Nilai EC: " + str(simec) + ", dan Nilai PH: " + str(simph)
                 else:
                     return "Data masukan tidak dalam bentuk digit"
             else:
@@ -189,7 +189,7 @@ def simpandata():
                     app.config["db"]["data"].insert(
                         dict(ts=ts, tinggi=simtinggi, ec=simec, ph=simph))
                     status = 200
-                    return "Nilai tinggi: " + simtinggi + ", Nilai EC: " + simec + ", dan Nilai PH: " + simph
+                    return "Nilai tinggi: " + str(simtinggi) + ", Nilai EC: " + str(simec) + ", dan Nilai PH: " + str(simph)
                 else:
                     return "Data masukan tidak dalam bentuk digit"
             else:
