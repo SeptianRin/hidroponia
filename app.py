@@ -14,7 +14,6 @@ from boddle import boddle
 
 app = bottle.Bottle()
 bottle.TEMPLATE_PATH.insert(0, "./")
-# app.config["db"] = dataset.connect("sqlite:///data.db?check_same_thread=False")
 if os.environ.get('APP_LOCATION') == 'heroku':
     uri = os.getenv("DATABASE_URL")  # or other relevant config var
 
@@ -24,9 +23,6 @@ if os.environ.get('APP_LOCATION') == 'heroku':
 else:
     app.config["db"] = dataset.connect(
         "sqlite:///data.db?check_same_thread=False")
-
-# app.config["db"] = dataset.connect("mysql+pymysql://septianrin:@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
-# app.config["db"] = dataset.connect("mysql+mysqldb://septianrin:hidroponia@septianrin.mysql.pythonanywhere-services.com/septianrin$hidroponia")
 app.config["api_key"] = "JtF2aUE5SGHfVJBCG5SH"
 
 
