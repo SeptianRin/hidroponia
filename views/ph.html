@@ -327,13 +327,17 @@
           return this;
         }
 
-        d3.json('/api/lihatdata', function(datalengkap) {
+        d3.json('/api/lihatdata/20', function(datalengkap) {
             data=datalengkap["dataPH"];
             //console.log(data);
             data = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
             //data.toLocaleString('ko-KR', { timeZone: 'WIB' })
+            data1=datalengkap["dataEC"];
+            //console.log(data);
+            data1= MG.convert.date(data1, 'date', "%Y-%m-%d %H:%M:%S");
+            //data.toLocaleString('ko-KR', { timeZone: 'WIB' })
             MG.data_graphic({
-                data: data,
+                data: [data,data1],
                 full_width: true,
                 height: 400,
                 interpolate: d3.curveLinear,
