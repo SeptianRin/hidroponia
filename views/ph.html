@@ -335,11 +335,11 @@
         d3.json('/api/lihatdata/20', function(datalengkap) {
             data1=datalengkap["dataPH"];
             //console.log(data);
-            data1 = MG.convert.date(data, 'date', "%Y-%m-%d %H:%M:%S");
+            data1 = MG.convert.date(data1, 'date', "%Y-%m-%d %H:%M:%S");
             //data.toLocaleString('ko-KR', { timeZone: 'WIB' })
             data2=datalengkap["dataEC"];
             //console.log(data);
-            data2= MG.convert.date(data1, 'date', "%Y-%m-%d %H:%M:%S");
+            data2= MG.convert.date(data2, 'date', "%Y-%m-%d %H:%M:%S");
             const labels = [
               'January',
               'February',
