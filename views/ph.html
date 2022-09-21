@@ -370,6 +370,10 @@
         data: data,
         options: {}
       };
+      const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
             //data.toLocaleString('ko-KR', { timeZone: 'WIB' })
             // MG.data_graphic({
             //     data: datalengkap.map,
@@ -397,12 +401,6 @@
           fetch_and_render();
         }, 5000);
       }
-    </script>
-    <script>
-      const myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-      );
     </script>
 
     <!-- application styles -->
